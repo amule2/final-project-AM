@@ -2,7 +2,11 @@
 
 namespace app\models;
 
+use PDO;
+
 abstract class Model {
+
+    protected $table;
 
     public function findAll() {
         $query = "select * from $this->table";
@@ -11,7 +15,7 @@ abstract class Model {
 
     private function connect() {
         $string = "mysql:hostname=" . DBHOST . ";dbname=" . DBNAME;
-        $con = new \PDO($string, DBUSER, DBPASS);
+        $con = new PDO($string, DBUSER, DBPASS);
         return $con;
     }
 
@@ -20,13 +24,13 @@ abstract class Model {
         $stm = $con->prepare($query);
         $check = $stm->execute($data);
         if ($check) {
-            //return as an associated array
-            $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
+            $result = $stm->fetchAll(PDO::FETCH_ASSOC);
             if (is_array($result) && count($result)) {
                 return $result;
+                }
             }
-        }
         return false;
-    }
+        }
+
 
 }

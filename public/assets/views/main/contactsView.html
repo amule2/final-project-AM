@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Me!</title>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    <style>
+        body{
+            font-family: "Jost";
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h2 {
+            color: #24468f;
+            font-size: 50px;
+            font-weight:500;
+        }
+        .bg-image {
+            background-image: url('https://cdn.pixabay.com/photo/2021/08/12/08/10/new-york-city-6540251_1280.jpg'); /* Replace with your own image URL */
+            background-size: cover;
+            background-position: center;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .form-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            background-color: #e8e8ea;
+            padding: 40px;
+            max-width: 1000px;
+            margin: 40px auto;
+            border-radius: 10px;
+            gap: 40px;
+            box-sizing: border-box;
+            width: 90%;
+        }
+        .navbar{
+            background-color: #24468f;
+            position: relative;
+        }
+        .navbar-nav .nav-link {
+            font-size: 20px;
+            display: flex;
+            color: #fdfdfd;
+            background-color: #24468f;
+            padding: 15px;
+        }
+        .navbar-brand{
+            font-size: 25px;
+            font-weight: 650;
+            color: #ffffff;
+            display: flex;
+            padding: 10px;
+        }
+        .submit-button {
+            background-color: #24468f;
+            color: white;
+            border: none;
+            margin-top: 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .error-text{
+            color: #900028;
+            font-weight: 600;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a href="http://localhost:8888/about" class="navbar-brand">Annie Mul&eacute</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="http://localhost:8888/about">About Me</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost:8888/projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="http://localhost:8888/contact">Contact Me</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class ="form-container">
+        <div class="container users-form margin-thirty">
+            <h2 class="margin-thirty">Contact Me</h2>
+            <form id="form-id">
+                <div class="form-group margin-twenty">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstName"
+                           placeholder="Enter First Name">
+                </div>
+                <div class="form-group margin-ten">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastName"
+                           placeholder="Enter Last Name">
+                </div>
+                <div class="form-group margin-ten">
+                    <label for="email" id="email-label">Email</label>
+                    <input type="text" class="form-control" id="email"
+                           placeholder="Enter Email">
+                </div>
+                <div class="form-group margin-ten">
+                    <label for="description" id="course-label">Description</label>
+                    <input type="text" class="form-control" id="description"
+                           placeholder="Enter Description">
+                </div>
+
+                <button type="submit" class="submit-button" type="submit">Submit</button>
+            </form>
+            <div id="success-message" style="display:none;"></div>
+            <div id="error-container" class="margin-ten"></div>
+    </div>
+
+        <div class="bg-image"></div>
+
+
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#form-id').on('submit', function (e) {
+            e.preventDefault();
+            const firstName = $('#firstName').val();
+            const lastName = $('#lastName').val();
+            const email = $('#email').val();
+            const description = $('#description').val();
+            const data = {
+                firstName,
+                lastName,
+                email,
+                description,
+            }
+            console.log("Submitting form...", JSON.stringify(data))
+            $.ajax({
+                url: `http://localhost:8888/api/contact`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                dataType: "json",
+                success: function (data) {
+                    console.log("User created:", data);
+                    $('#form-id').hide();
+                    $('#success-message').html('<p>Thank you for your message!</p>').show();
+
+                },
+                error: function (data){
+                    console.log(data.responseJSON)
+                    $('#error-container').html('')
+                    for (const property in data.responseJSON) {
+                        $('#error-container').append(` <div class='error-text'>${data.responseJSON[property]}</div>`)
+                    }
+                }
+
+                })
+            });
+        })
+
+</script>
+
+</body>
+</html>
